@@ -562,7 +562,7 @@
     <div id="modal-overlay" class="modal-overlay"></div>
     <div class="message-box">
       <div class="birthday-card flex flex-col items-center">
-        <div class="relative w-full h-24"></div>
+
         <img src="WhatsApp Image 2025-09-13 at 15.21.36_5518dbbf.jpg" alt="Muntsha" class="profile-image rounded-full w-48 h-48 mx-auto mb-6 object-cover">
         <h2 class="text-center">🎉 Happy Birthday, Muntsha! 🎉</h2>
         <p class="text-center mt-6">Happy Birthday, my love 💖
@@ -793,7 +793,7 @@ Muntsha, you are the best thing that has ever happened to me. I love you with al
       }
 
       function createFireworks() {
-        const container = document.querySelector('.birthday-card .relative');
+        const container = document.querySelector('.birthday-card');
         const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98'];
         
         for (let i = 0; i < 20; i++) {
@@ -835,8 +835,8 @@ Muntsha, you are the best thing that has ever happened to me. I love you with al
       }
 
       function createConfetti() {
-        const confettiContainer = document.querySelector('.birthday-card .relative');
-        confettiContainer.innerHTML = '';
+        const confettiContainer = document.querySelector('.birthday-card');
+        // Don't clear innerHTML as it would remove the card content
         const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e9'];
         const shapes = ['circle', 'square', 'triangle'];
         
