@@ -469,9 +469,11 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
-      margin: 2rem 0;
+      margin: 2rem auto;
       width: 100%;
       max-width: 100%;
+      justify-items: center;
+      place-items: center;
     }
 
     /* Enhanced Responsive Design */
@@ -502,7 +504,8 @@
       #game-board {
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
-        margin: 1.5rem 0;
+        margin: 1.5rem auto;
+        justify-items: center;
       }
       .game-card {
         width: 75px;
@@ -538,7 +541,10 @@
         height: 70px;
         font-size: 1.8rem;
       }
-      #game-board { gap: 0.8rem; }
+      #game-board { 
+        gap: 0.8rem;
+        justify-items: center;
+      }
     }
 
     /* Standard Mobile Optimization (375px-414px) */
@@ -557,8 +563,9 @@
       }
       #game-board {
         gap: 0.6rem;
-        margin: 1.2rem 0;
+        margin: 1.2rem auto;
         grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
       }
       .game-card {
         width: 65px;
@@ -611,7 +618,10 @@
         height: 58px;
         font-size: 1.4rem;
       }
-      #game-board { gap: 0.5rem; }
+      #game-board { 
+        gap: 0.5rem;
+        justify-items: center;
+      }
       .stats-container { 
         font-size: 0.85rem;
         padding: 0.8rem;
@@ -753,7 +763,11 @@
         height: 40px;
         font-size: 1rem;
       }
-      #game-board { gap: 0.3rem; margin: 0.3rem 0; }
+      #game-board { 
+        gap: 0.3rem; 
+        margin: 0.3rem auto;
+        justify-items: center;
+      }
       .stats-container { padding: 0.3rem; }
       .main-container { padding: 0.4rem; }
     }
@@ -768,7 +782,10 @@
         height: 42px;
         font-size: 1rem;
       }
-      #game-board { gap: 0.2rem; }
+      #game-board { 
+        gap: 0.2rem;
+        justify-items: center;
+      }
       .stats-container { 
         font-size: 0.7rem;
         padding: 0.4rem;
@@ -924,6 +941,116 @@ Muntsha, you are the best thing that has ever happened to me. I love you with al
           card.setAttribute('aria-label', `Card ${i + 1}`);
 
           const cardFront = document.createElement('div');
+          cardFront.classList.add('card-face','card-front');
+          cardFront.textContent = cardArray[i];
+
+          const cardBack = document.createElement('div');
+          cardBack.classList.add('card-face','card-back');
+          cardBack.textContent = '🎀';
+
+          card.appendChild(cardFront);
+          card.appendChild(cardBack);
+          cardContainer.appendChild(card);
+
+          cardContainer.addEventListener('click', flipCard);
+          cardContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              flipCard(e);
+            }
+          });
+
+          gameBoard.appendChild(cardContainer);
+        }
+      }
+
+      function checkForMatch() {
+        boardLocked = true;
+        const cards = document.querySelectorAll('.game-card');
+        const optionOneId = cardsChosenId[0];
+        const optionTwoId = cardsChosenId[1];
+
+        if (optionOneId === optionTwoId) {
+          setTimeout(() => {
+            cards[optionOneId].classList.remove('flipped');
+            boardLocked = false;
+          }, 500);
+        } else if (cardsChosen[0] === cardsChosen[1]) {
+          const cardOne = cards[optionOneId];
+          const cardTwo = cards[optionTwoId];
+
+          cardOne.classList.add('matched','flipped');
+          cardTwo.classList.add('matched','flipped');
+
+          cardsWon.push(cardsChosen);
+          pairsFound.textContent = cardsWon.length;
+
+          setTimeout(() => {
+            boardLocked = false;
+            if (cardsWon.length === cardEmojis.length) {
+              showFinalMessage();
+            }
+          }, 700);
+        } else {
+          setTimeout(() => {
+            cards[optionOneId].classList.remove('flipped');
+            cards[optionTwoId].classList.remove('flipped');
+            boardLocked = false;
+          }, 1000);
+        }
+
+        cardsChosen = [];
+        cardsChosenId = [];
+      }
+
+      function flipCard(event) {
+        if (boardLocked) return;
+        const card = event.currentTarget.querySelector('.game-card');
+        const cardId = card.getAttribute('data-id');
+
+        if (card.classList.contains('matched') || cardsChosenId.includes(cardId)) {
+          return;
+        }
+
+        playFlipSound();
+
+        card.classList.add('flipped');
+        const cardName = card.getAttribute('data-name');
+        cardsChosen.push(cardName);
+        cardsChosenId.push(cardId);
+
+        if (cardsChosen.length === 2) {
+          moves++;
+          moveCounter.textContent = moves;
+          setTimeout(checkForMatch, 500);
+        }
+      }
+
+      function showFinalMessage() {
+        messageModal.classList.remove('hidden');
+      }
+
+      restartButton.addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      closeModalButton.addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      document.getElementById('modal-overlay').addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      createBoard();
+      createFloatingHearts();
+    });
+  </script>
+</body>
+</html> = document.createElement('div');
           cardFront.classList.add('card-face','card-front');
           cardFront.textContent = cardArray[i];
 
