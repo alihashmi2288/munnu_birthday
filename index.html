@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Happy Birthday, Muntsha!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-pink: #e91e63;
+      --secondary-purple: #9c27b0;
+      --accent-gold: #ffd700;
+      --soft-pink: #fce4ec;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --shadow-soft: 0 10px 40px rgba(0,0,0,0.1);
+      --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hearts" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><text x="10" y="15" text-anchor="middle" font-size="12" fill="%23ffffff" opacity="0.1">💖</text></pattern></defs><rect width="100" height="100" fill="url(%23hearts)"/></svg>') repeat;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.3;
+      animation: floatUp 8s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    .main-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: var(--shadow-soft);
+      animation: slideInUp 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(233, 30, 99, 0.1), transparent);
+      animation: rotate 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes slideInUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .title {
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .game-card-container {
+      perspective: 1000px;
+      animation: cardAppear 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes cardAppear {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .game-card {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .game-card.flipped { transform: rotateY(180deg); }
+    .game-card.matched {
+      transform: rotateY(180deg) scale(1.1);
+      pointer-events: none;
+      animation: matchPulse 0.6s ease-out;
+    }
+
+    @keyframes matchPulse {
+      0% { transform: rotateY(180deg) scale(1); }
+      50% { transform: rotateY(180deg) scale(1.2); }
+      100% { transform: rotateY(180deg) scale(1.1); }
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .card-front {
+      background: var(--gradient-1);
+      color: white;
+      transform: rotateY(180deg);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .card-back {
+      background: var(--gradient-2);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-back::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+      100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    }
+
+    .stats-container {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      animation: statsFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes statsFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .text-bounce {
+      animation: textBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes textBounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    .button-wiggle {
+      animation: buttonWiggle 1s ease-in-out infinite;
+    }
+
+    @keyframes buttonWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(1deg); }
+      75% { transform: rotate(-1deg); }
+    }
+
+    .footer-credit {
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+
+    .footer-credit:hover {
+      opacity: 1;
+    }
+
+    .celebrate-button {
+      background: var(--gradient-2);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(233, 30, 99, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .celebrate-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .celebrate-button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(233, 30, 99, 0.4);
+    }
+
+    .celebrate-button:hover::before {
+      left: 100%;
+    }
+
+    .message-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 3rem;
+      border-radius: 30px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      text-align: center;
+      z-index: 100;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90%;
+      width: 500px;
+      border: 1px solid rgba(255,255,255,0.3);
+      animation: modalAppear 0.6s ease-out;
+    }
+
+    @keyframes modalAppear {
+      from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .hidden { display: none; }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px);
+      z-index: 90;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .birthday-card {
+      font-family: 'Dancing Script', cursive;
+      background: var(--gradient-2);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .birthday-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 15s linear infinite;
+    }
+
+    .birthday-card h2 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      margin-bottom: 1.5rem;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+      50% { text-shadow: 2px 2px 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.6); }
+    }
+
+    .birthday-card p {
+      font-size: 1.5rem;
+      line-height: 1.8;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      font-weight: 500;
+    }
+
+    .profile-image {
+      border: 4px solid rgba(255,255,255,0.8);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+      animation: profilePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes profilePulse {
+      0%, 100% { transform: scale(1) rotate(0deg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+      50% { transform: scale(1.05) rotate(2deg); box-shadow: 0 15px 40px rgba(255,105,180,0.4); }
+    }
+
+    .profile-image:hover {
+      transform: scale(1.1) rotate(5deg);
+      animation-play-state: paused;
+    }
+
+    .celebration-animation {
+      animation: celebrationBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes celebrationBounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-20px) scale(1.1); }
+      60% { transform: translateY(-10px) scale(1.05); }
+    }
+
+    .fireworks {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      animation: firework 1.5s ease-out infinite;
+    }
+
+    @keyframes firework {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(0);
+        opacity: 0;
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #fff 0%, transparent 70%);
+      border-radius: 50%;
+      animation: sparkle 1s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1) rotate(180deg); }
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      opacity: 0;
+      animation: confetti-fall 3s ease-out forwards;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-20px) rotate(0deg) scale(0); opacity: 1; }
+      10% { transform: translateY(0) rotate(36deg) scale(1); }
+      100% { transform: translateY(300px) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    /* Enhanced Responsive Design */
+    @media (max-width: 1200px) {
+      .main-container {
+        max-width: 95%;
+        padding: 2.2rem;
+      }
+      .title { font-size: 4.5rem; }
+    }
+
+    @media (max-width: 1024px) {
+      .main-container {
+        max-width: 90%;
+        padding: 2rem;
+      }
+      .title { font-size: 4rem; }
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      .main-container {
+        padding: 2rem;
+        border-radius: 25px;
+      }
+      .title { font-size: 3.5rem; }
+      #game-board {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+      .game-card {
+        width: 90px;
+        height: 90px;
+        font-size: 2.5rem;
+      }
+      .stats-container {
+        padding: 1.5rem;
+        font-size: 1.1rem;
+      }
+      .message-box {
+        width: 95%;
+        padding: 2.5rem;
+      }
+      .birthday-card h2 { font-size: 2.8rem; }
+      .birthday-card p { font-size: 1.4rem; }
+      .profile-image {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main-container {
+        padding: 1.8rem;
+        border-radius: 22px;
+      }
+      .title { font-size: 3rem; }
+      .game-card {
+        width: 85px;
+        height: 85px;
+        font-size: 2.3rem;
+      }
+      #game-board { gap: 1.2rem; }
+    }
+
+    /* Standard Mobile Optimization (375px-414px) */
+    @media (max-width: 480px) {
+      body { padding: 16px; }
+      .main-container {
+        padding: 1.8rem;
+        border-radius: 24px;
+        max-width: 100%;
+      }
+      .title { 
+        font-size: 2.8rem; 
+        margin-bottom: 1.2rem;
+        line-height: 1.1;
+      }
+      #game-board {
+        gap: 1.2rem;
+        margin: 2.2rem 0;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .game-card {
+        width: 82px;
+        height: 82px;
+        font-size: 2.2rem;
+        border-radius: 16px;
+      }
+      .card-face { border-radius: 16px; }
+      .stats-container {
+        padding: 1.4rem;
+        margin-top: 2.2rem;
+        font-size: 1.1rem;
+      }
+      .celebrate-button {
+        padding: 16px 32px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+      }
+      .footer-credit {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+      }
+      .message-box {
+        padding: 2.2rem;
+        border-radius: 24px;
+        width: 92%;
+      }
+      .birthday-card {
+        padding: 2.2rem;
+      }
+      .birthday-card h2 { font-size: 2.4rem; }
+      .birthday-card p { 
+        font-size: 1.35rem;
+        line-height: 1.6;
+      }
+      .profile-image {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    /* Smaller Mobile (350px-400px) */
+    @media (max-width: 400px) {
+      .main-container { padding: 1.4rem; }
+      .title { font-size: 2.4rem; }
+      .game-card {
+        width: 72px;
+        height: 72px;
+        font-size: 1.9rem;
+      }
+      #game-board { gap: 1rem; }
+      .stats-container { 
+        font-size: 1rem;
+        padding: 1.2rem;
+      }
+      .celebrate-button {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+      }
+      .footer-credit {
+        margin-top: 1.2rem;
+        font-size: 0.85rem;
+      }
+      .birthday-card h2 { font-size: 2.1rem; }
+      .birthday-card p { font-size: 1.25rem; }
+      .profile-image {
+        width: 130px;
+        height: 130px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .title { font-size: 2rem; }
+      .game-card {
+        width: 62px;
+        height: 62px;
+        font-size: 1.6rem;
+      }
+      #game-board { gap: 0.7rem; }
+      .stats-container { font-size: 0.9rem; padding: 1rem; }
+      .birthday-card h2 { font-size: 1.8rem; }
+      .birthday-card p { font-size: 1.1rem; }
+      .profile-image {
+        width: 110px;
+        height: 110px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      body { padding: 8px; }
+      .main-container { padding: 1rem; }
+      .title { font-size: 1.8rem; }
+      .game-card {
+        width: 58px;
+        height: 58px;
+        font-size: 1.4rem;
+      }
+      #game-board { gap: 0.5rem; }
+      .stats-container { 
+        font-size: 0.85rem; 
+        padding: 0.8rem;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .celebrate-button {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+      .footer-credit {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+      }
+      .message-box { padding: 1.5rem; }
+      .birthday-card { padding: 1.5rem; }
+      .birthday-card h2 { font-size: 1.6rem; }
+      .birthday-card p { font-size: 1rem; }
+      .profile-image {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    /* Landscape orientation fixes */
+    @media (max-height: 600px) and (orientation: landscape) {
+      body { padding: 8px; }
+      .main-container {
+        padding: 0.8rem;
+        max-width: 98%;
+      }
+      .title { font-size: 1.6rem; margin-bottom: 0.3rem; }
+      #game-board {
+        margin: 0.8rem 0;
+        gap: 0.6rem;
+      }
+      .game-card {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+      }
+      .stats-container {
+        padding: 0.6rem;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+      }
+      .celebrate-button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        margin-top: 1rem;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .title { font-size: 1.4rem; }
+      .game-card {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+      #game-board { gap: 0.4rem; margin: 0.5rem 0; }
+      .stats-container { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-hearts" id="floating-hearts"></div>
+  
+  <div class="main-container flex flex-col items-center">
+    <h1 class="title text-5xl sm:text-6xl lg:text-7xl mb-4">Happy Birthday, Muntsha!</h1>
+    <p class="text-lg sm:text-xl text-gray-600 mb-3 text-center font-medium">A little memory game for you. Find all the matching pairs!</p>
+    <p class="text-base sm:text-lg text-purple-700 mb-8 text-center italic font-semibold">Fun fact: Muntsha loves purple and surprises! 🎈</p>
+
+    <div class="grid grid-cols-4 gap-4" id="game-board"></div>
+
+    <div class="stats-container w-full">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-xl text-gray-700 font-bold text-center sm:text-left"><span class="text-purple-600">Moves:</span> <span id="move-counter" class="text-pink-600 font-bold text-bounce">0</span></div>
+        <div class="text-xl text-gray-700 font-bold text-center sm:text-right"><span class="text-purple-600">Pairs Found:</span> <span id="pairs-found" class="text-pink-600 font-bold text-bounce">0</span> / <span id="total-pairs" class="text-pink-600 font-bold">6</span></div>
+      </div>
+    </div>
+
+    <button id="restart-button" class="mt-8 celebrate-button button-wiggle">🎮 Restart Game 🎮</button>
+    
+    <div class="mt-6 text-center footer-credit">
+      <p class="text-sm text-gray-500 font-medium">Made by <span class="text-purple-600 font-semibold">Syed Ali Hashmi</span></p>
+    </div>
+  </div>
+
+  <div id="message-modal" class="hidden">
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <div class="message-box">
+      <div class="birthday-card flex flex-col items-center">
+        <div class="relative w-full h-24"></div>
+        <img src="WhatsApp Image 2025-09-13 at 15.21.36_5518dbbf.jpg" alt="Muntsha" class="profile-image rounded-full w-48 h-48 mx-auto mb-6 object-cover">
+        <h2 class="text-center">🎉 Happy Birthday, Muntsha! 🎉</h2>
+        <p class="text-center mt-6">Happy Birthday, my love 💖
+Muntsha, you are the best thing that has ever happened to me. I love you with all my heart and soul. Sometimes I wish I could open my heart so you could see how deeply I feel for you. I'm truly the luckiest person to have you in my life. May Allah always bless you with happiness, health, and endless joy. You mean everything to me.</p>
+      </div>
+      <button id="close-modal" class="celebrate-button mt-6">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const gameBoard = document.getElementById('game-board');
+      const restartButton = document.getElementById('restart-button');
+      const moveCounter = document.getElementById('move-counter');
+      const pairsFound = document.getElementById('pairs-found');
+      const totalPairsDisplay = document.getElementById('total-pairs');
+      const messageModal = document.getElementById('message-modal');
+      const closeModalButton = document.getElementById('close-modal');
+
+      const cardEmojis = ['🎂','🎈','🎁','🎉','💖','🍰'];
+      const cardArray = [...cardEmojis, ...cardEmojis];
+
+      let cardsChosen = [];
+      let cardsChosenId = [];
+      let cardsWon = [];
+      let moves = 0;
+      let boardLocked = false;
+
+      // Audio setup
+      const flipSound = new Audio('https://cdn.pixabay.com/audio/2022/10/16/audio_122b7b2e8b.mp3');
+      flipSound.preload = 'auto';
+      flipSound.volume = 0.3;
+      flipSound.addEventListener('error', (e) => console.warn('Flip audio error:', e));
+
+      function playFlipSound() {
+        try {
+          const s = flipSound.cloneNode(true);
+          s.currentTime = 0;
+          s.play().catch(err => {
+            console.warn('flipSound play rejected:', err);
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+              const ctx = new AudioContext();
+              const o = ctx.createOscillator();
+              const g = ctx.createGain();
+              o.type = 'sine';
+              o.frequency.value = 880;
+              g.gain.value = 0.02;
+              o.connect(g); g.connect(ctx.destination);
+              o.start();
+              setTimeout(() => { o.stop(); ctx.close(); }, 80);
+            }
+          });
+        } catch (e) { console.warn('playFlipSound error:', e); }
+      }
+
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      function createFloatingHearts() {
+        const container = document.getElementById('floating-hearts');
+        const hearts = ['💖', '💕', '💗', '💓', '💝', '🎈', '🎂', '🎉'];
+        
+        setInterval(() => {
+          const heart = document.createElement('div');
+          heart.className = 'heart';
+          heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+          heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+          container.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 8000);
+        }, 2000);
+      }
+
+      function createBoard() {
+        cardsWon = [];
+        moves = 0;
+        moveCounter.textContent = moves;
+        pairsFound.textContent = cardsWon.length;
+        totalPairsDisplay.textContent = cardEmojis.length;
+        gameBoard.innerHTML = '';
+        shuffle(cardArray);
+
+        for (let i = 0; i < cardArray.length; i++) {
+          const cardContainer = document.createElement('div');
+          cardContainer.classList.add('game-card-container');
+          cardContainer.style.animationDelay = `${i * 0.1}s`;
+
+          const card = document.createElement('div');
+          card.classList.add('game-card');
+          card.setAttribute('data-id', i);
+          card.setAttribute('data-name', cardArray[i]);
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('role', 'button');
+          card.setAttribute('aria-label', `Card ${i + 1}`);
+
+          const cardFront = document.createElement('div');
+          cardFront.classList.add('card-face','card-front');
+          cardFront.textContent = cardArray[i];
+
+          const cardBack = document.createElement('div');
+          cardBack.classList.add('card-face','card-back');
+          cardBack.textContent = '🎀';
+
+          card.appendChild(cardFront);
+          card.appendChild(cardBack);
+          cardContainer.appendChild(card);
+
+          cardContainer.addEventListener('click', flipCard);
+          cardContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              flipCard(e);
+            }
+          });
+
+          gameBoard.appendChild(cardContainer);
+        }
+      }
+
+      function checkForMatch() {
+        boardLocked = true;
+        const cards = document.querySelectorAll('.game-card');
+        const optionOneId = cardsChosenId[0];
+        const optionTwoId = cardsChosenId[1];
+
+        if (optionOneId === optionTwoId) {
+          setTimeout(() => {
+            cards[optionOneId].classList.remove('flipped');
+            boardLocked = false;
+          }, 500);
+        } else if (cardsChosen[0] === cardsChosen[1]) {
+          const cardOne = cards[optionOneId];
+          const cardTwo = cards[optionTwoId];
+
+          cardOne.classList.add('matched','flipped');
+          cardTwo.classList.add('matched','flipped');
+
+          cardsWon.push(cardsChosen);
+          pairsFound.textContent = cardsWon.length;
+
+          setTimeout(() => {
+            boardLocked = false;
+            if (cardsWon.length === cardEmojis.length) {
+              showFinalMessage();
+            }
+          }, 700);
+        } else {
+          setTimeout(() => {
+            cards[optionOneId].classList.remove('flipped');
+            cards[optionTwoId].classList.remove('flipped');
+            boardLocked = false;
+          }, 1000);
+        }
+
+        cardsChosen = [];
+        cardsChosenId = [];
+      }
+
+      function flipCard(event) {
+        if (boardLocked) return;
+        const card = event.currentTarget.querySelector('.game-card');
+        const cardId = card.getAttribute('data-id');
+
+        if (card.classList.contains('matched') || cardsChosenId.includes(cardId)) {
+          return;
+        }
+
+        playFlipSound();
+
+        card.classList.add('flipped');
+        const cardName = card.getAttribute('data-name');
+        cardsChosen.push(cardName);
+        cardsChosenId.push(cardId);
+
+        if (cardsChosen.length === 2) {
+          moves++;
+          moveCounter.textContent = moves;
+          setTimeout(checkForMatch, 500);
+        }
+      }
+
+      function playCelebrationMusic() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          const ctx = new AudioContext();
+          
+          const melody = [
+            {freq: 261.63, duration: 0.5}, {freq: 261.63, duration: 0.3}, {freq: 293.66, duration: 0.7}, 
+            {freq: 261.63, duration: 0.7}, {freq: 349.23, duration: 0.7}, {freq: 329.63, duration: 1.0}, 
+            {freq: 261.63, duration: 0.5}, {freq: 261.63, duration: 0.3}, {freq: 293.66, duration: 0.7}, 
+            {freq: 261.63, duration: 0.7}, {freq: 392.00, duration: 0.7}, {freq: 349.23, duration: 1.0}
+          ];
+          
+          let currentTime = ctx.currentTime;
+          
+          melody.forEach((note, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = note.freq;
+            
+            gain.gain.setValueAtTime(0, currentTime);
+            gain.gain.linearRampToValueAtTime(0.3, currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, currentTime + note.duration);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start(currentTime);
+            osc.stop(currentTime + note.duration);
+            
+            currentTime += note.duration + 0.1;
+          });
+          
+          setTimeout(() => ctx.close(), 8000);
+          
+        } catch (e) {
+          console.warn('Celebration music failed:', e);
+        }
+      }
+
+      function createFireworks() {
+        const container = document.querySelector('.birthday-card .relative');
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98'];
+        
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            const centerX = Math.random() * 100;
+            const centerY = Math.random() * 50 + 25;
+            
+            for (let j = 0; j < 12; j++) {
+              const firework = document.createElement('div');
+              firework.className = 'fireworks';
+              firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+              firework.style.left = centerX + '%';
+              firework.style.top = centerY + '%';
+              
+              const angle = (j * 30) * Math.PI / 180;
+              const distance = 50 + Math.random() * 50;
+              firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+              firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+              firework.style.animationDelay = Math.random() * 0.5 + 's';
+              
+              container.appendChild(firework);
+              setTimeout(() => firework.remove(), 1500);
+            }
+          }, i * 200);
+        }
+      }
+
+      function createSparkles() {
+        const container = document.querySelector('.birthday-card');
+        for (let i = 0; i < 30; i++) {
+          const sparkle = document.createElement('div');
+          sparkle.className = 'sparkle';
+          sparkle.style.left = Math.random() * 100 + '%';
+          sparkle.style.top = Math.random() * 100 + '%';
+          sparkle.style.animationDelay = Math.random() * 2 + 's';
+          container.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 3000);
+        }
+      }
+
+      function createConfetti() {
+        const confettiContainer = document.querySelector('.birthday-card .relative');
+        confettiContainer.innerHTML = '';
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e9'];
+        const shapes = ['circle', 'square', 'triangle'];
+        
+        for (let i = 0; i < 200; i++) {
+          const confettiPiece = document.createElement('div');
+          confettiPiece.classList.add('confetti-piece');
+          
+          const shape = shapes[Math.floor(Math.random() * shapes.length)];
+          if (shape === 'square') {
+            confettiPiece.style.borderRadius = '2px';
+          } else if (shape === 'triangle') {
+            confettiPiece.style.width = '0';
+            confettiPiece.style.height = '0';
+            confettiPiece.style.borderLeft = '6px solid transparent';
+            confettiPiece.style.borderRight = '6px solid transparent';
+            confettiPiece.style.borderBottom = `12px solid ${colors[Math.floor(Math.random() * colors.length)]}`;
+            confettiPiece.style.backgroundColor = 'transparent';
+          } else {
+            confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          }
+          
+          confettiPiece.style.left = `${Math.random() * 100}%`;
+          confettiPiece.style.top = `${Math.random() * -30}%`;
+          confettiPiece.style.animationDelay = `${Math.random() * 3}s`;
+          confettiPiece.style.animationDuration = `${3 + Math.random() * 2}s`;
+          confettiPiece.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.6})`;
+          confettiContainer.appendChild(confettiPiece);
+        }
+      }
+
+      function showFinalMessage() {
+        messageModal.classList.remove('hidden');
+        
+        const birthdayCard = document.querySelector('.birthday-card');
+        birthdayCard.classList.add('celebration-animation');
+        
+        playCelebrationMusic();
+        
+        createConfetti();
+        setTimeout(() => createFireworks(), 500);
+        setTimeout(() => createSparkles(), 1000);
+        
+        setTimeout(() => {
+          birthdayCard.classList.remove('celebration-animation');
+        }, 6000);
+      }
+
+      restartButton.addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      closeModalButton.addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      document.getElementById('modal-overlay').addEventListener('click', () => {
+        messageModal.classList.add('hidden');
+        createBoard();
+      });
+
+      createBoard();
+      createFloatingHearts();
+    });
+  </script>
+</body>
+</html>
