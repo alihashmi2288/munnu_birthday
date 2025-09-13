@@ -771,32 +771,36 @@ Muntsha, you are the best thing that has ever happened to me. I love you with al
         const optionTwoId = parseInt(cardsChosenId[1]);
 
         if (optionOneId === optionTwoId) {
-          cards[optionOneId].classList.remove('flipped');
-          resetTurn();
+          setTimeout(() => {
+            cards[optionOneId].classList.remove('flipped');
+            resetTurn();
+          }, 300);
           return;
         }
 
         if (cardsChosen[0] === cardsChosen[1]) {
-          const cardOne = cards[optionOneId];
-          const cardTwo = cards[optionTwoId];
+          setTimeout(() => {
+            const cardOne = cards[optionOneId];
+            const cardTwo = cards[optionTwoId];
 
-          cardOne.classList.add('matched');
-          cardTwo.classList.add('matched');
+            cardOne.classList.add('matched');
+            cardTwo.classList.add('matched');
 
-          cardsWon.push(cardsChosen);
-          pairsFound.textContent = cardsWon.length;
+            cardsWon.push(cardsChosen);
+            pairsFound.textContent = cardsWon.length;
 
-          resetTurn();
-          
-          if (cardsWon.length === cardEmojis.length) {
-            setTimeout(showFinalMessage, 500);
-          }
+            resetTurn();
+            
+            if (cardsWon.length === cardEmojis.length) {
+              setTimeout(showFinalMessage, 300);
+            }
+          }, 600);
         } else {
           setTimeout(() => {
             cards[optionOneId].classList.remove('flipped');
             cards[optionTwoId].classList.remove('flipped');
             resetTurn();
-          }, 800);
+          }, 1000);
         }
       }
 
