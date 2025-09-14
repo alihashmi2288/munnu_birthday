@@ -189,23 +189,103 @@
             50% { opacity: 1; transform: scale(1) rotate(180deg); }
         }
 
-        .firework {
+        .rocket {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: firework 1.5s ease-out forwards;
-            will-change: transform, opacity;
+            width: 6px;
+            height: 20px;
+            background: linear-gradient(to top, #ff6b6b, #ffd700, #fff);
+            border-radius: 3px;
+            animation: rocketLaunch 1.2s ease-out forwards;
+            will-change: transform;
         }
 
-        @keyframes firework {
+        .rocket::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 15px;
+            background: radial-gradient(circle, #ff4757, #ff6b6b, transparent);
+            border-radius: 50%;
+            animation: rocketFlame 1.2s ease-out forwards;
+        }
+
+        @keyframes rocketLaunch {
             0% { 
-                transform: translate(0, 0) scale(1); 
+                transform: translateY(0) scale(1);
                 opacity: 1;
+            }
+            100% { 
+                transform: translateY(var(--launch-height)) scale(0.8);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes rocketFlame {
+            0% { 
+                height: 15px;
+                opacity: 1;
+            }
+            100% { 
+                height: 25px;
+                opacity: 0.6;
+            }
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fireworkBurst 2s ease-out forwards;
+            will-change: transform, opacity;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        @keyframes fireworkBurst {
+            0% { 
+                transform: translate(0, 0) scale(0.5); 
+                opacity: 1;
+                box-shadow: 0 0 15px currentColor;
+            }
+            30% {
+                transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1.2);
+                opacity: 1;
+                box-shadow: 0 0 25px currentColor;
             }
             100% { 
                 transform: translate(var(--dx), var(--dy)) scale(0); 
                 opacity: 0;
+                box-shadow: 0 0 5px currentColor;
+            }
+        }
+
+        .explosion {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: explode 0.8s ease-out forwards;
+            will-change: transform, opacity;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+                box-shadow: 0 0 0 0 currentColor;
+            }
+            50% {
+                transform: scale(2);
+                opacity: 0.8;
+                box-shadow: 0 0 30px 10px currentColor;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+                box-shadow: 0 0 50px 20px transparent;
             }
         }
 
