@@ -293,63 +293,126 @@
       }
     }
 
-    // Audio functions
+    // Audio setup
+    let audioContext = null;
+    
+    function initAudio() {
+      if (!audioContext) {
+        try {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          console.warn('Audio not supported');
+        }
+      }
+      return audioContext;
+    }
+
     function playFlipSound() {
+      const ctx = initAudio();
+      if (!ctx) return;
+      
       try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
         
         oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        gainNode.connect(ctx.destination);
         
         oscillator.frequency.value = 800;
         oscillator.type = 'sine';
-        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.15, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
         
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.15);
       } catch (e) {}
     }
 
     function playMatchSound() {
+      const ctx = initAudio();
+      if (!ctx) return;
+      
       try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
         
         oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        gainNode.connect(ctx.destination);
         
         oscillator.frequency.value = 1200;
         oscillator.type = 'triangle';
-        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
         
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.3);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.4);
+      } catch (e) {}
+    }
+
+    function playHappyBirthdayMelody() {
+      const ctx = initAudio();
+      if (!ctx) return;
+      
+      try {
+        // Happy Birthday melody notes (C4, C4, D4, C4, F4, E4, C4, C4, D4, C4, G4, F4)
+        const melody = [
+          {freq: 261.63, duration: 0.5}, // C4 - Hap-
+          {freq: 261.63, duration: 0.3}, // C4 - py
+          {freq: 293.66, duration: 0.7}, // D4 - Birth-
+          {freq: 261.63, duration: 0.7}, // C4 - day
+          {freq: 349.23, duration: 0.7}, // F4 - to
+          {freq: 329.63, duration: 1.0}, // E4 - you
+          {freq: 261.63, duration: 0.5}, // C4 - Hap-
+          {freq: 261.63, duration: 0.3}, // C4 - py
+          {freq: 293.66, duration: 0.7}, // D4 - Birth-
+          {freq: 261.63, duration: 0.7}, // C4 - day
+          {freq: 392.00, duration: 0.7}, // G4 - to
+          {freq: 349.23, duration: 1.0}  // F4 - you
+        ];
+        
+        let currentTime = ctx.currentTime;
+        
+        melody.forEach((note) => {
+          const oscillator = ctx.createOscillator();
+          const gainNode = ctx.createGain();
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(ctx.destination);
+          
+          oscillator.frequency.value = note.freq;
+          oscillator.type = 'sine';
+          
+          gainNode.gain.setValueAtTime(0.3, currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + note.duration);
+          
+          oscillator.start(currentTime);
+          oscillator.stop(currentTime + note.duration);
+          
+          currentTime += note.duration + 0.1;
+        });
       } catch (e) {}
     }
 
     function playVictoryMusic() {
+      const ctx = initAudio();
+      if (!ctx) return;
+      
       try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const notes = [523, 659, 784, 1047, 784, 659, 523];
         
         notes.forEach((freq, i) => {
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
+          const oscillator = ctx.createOscillator();
+          const gainNode = ctx.createGain();
           
           oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
+          gainNode.connect(ctx.destination);
           
           oscillator.frequency.value = freq;
           oscillator.type = 'sine';
           
-          const startTime = audioContext.currentTime + i * 0.2;
-          gainNode.gain.setValueAtTime(0.3, startTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
+          const startTime = ctx.currentTime + i * 0.2;
+          gainNode.gain.setValueAtTime(0.25, startTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
           
           oscillator.start(startTime);
           oscillator.stop(startTime + 0.4);
@@ -445,6 +508,11 @@
         return;
       }
 
+      // Initialize audio on first user interaction
+      if (!audioContext) {
+        initAudio();
+      }
+      
       playFlipSound();
       card.classList.add('flipped');
       const cardName = card.getAttribute('data-name');
@@ -496,7 +564,10 @@
             playVictoryMusic();
             createConfetti();
             createPartyPoppers();
-            setTimeout(() => messageModal.classList.remove('hidden'), 1000);
+            setTimeout(() => {
+              messageModal.classList.remove('hidden');
+              playHappyBirthdayMelody();
+            }, 1000);
           }
         }, 700);
       } else {
