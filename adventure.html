@@ -191,15 +191,93 @@
 
         .firework {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            animation: firework 1.5s ease-out infinite;
+            animation: firework 2s ease-out forwards;
+            box-shadow: 0 0 10px currentColor;
         }
 
         @keyframes firework {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+            0% { 
+                transform: translate(0, 0) scale(0.5); 
+                opacity: 1;
+                box-shadow: 0 0 5px currentColor;
+            }
+            20% {
+                transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(1.2);
+                opacity: 1;
+                box-shadow: 0 0 15px currentColor;
+            }
+            100% { 
+                transform: translate(var(--dx), var(--dy)) scale(0); 
+                opacity: 0;
+                box-shadow: 0 0 20px currentColor;
+            }
+        }
+
+        .firework-trail {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, currentColor, transparent);
+            animation: trail 2s ease-out forwards;
+        }
+
+        @keyframes trail {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5) translateY(10px); }
+        }
+
+        .firework-burst {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: burst 1.5s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+                box-shadow: 0 0 0 0 currentColor;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+                box-shadow: 0 0 20px 5px currentColor;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+                box-shadow: 0 0 40px 10px transparent;
+            }
+        }
+
+        .rocket {
+            position: absolute;
+            width: 4px;
+            height: 15px;
+            background: linear-gradient(to top, #ff6b6b, #ffd700);
+            border-radius: 2px;
+            animation: rocket 1s ease-out forwards;
+        }
+
+        @keyframes rocket {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+                box-shadow: 0 5px 10px rgba(255, 107, 107, 0.5);
+            }
+            80% {
+                transform: translateY(var(--rocket-height)) scale(0.8);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(var(--rocket-height)) scale(0);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
@@ -358,34 +436,90 @@
             document.getElementById('letter-modal').classList.add('hidden');
         }
 
-        // Fireworks animation
+        // Enhanced Fireworks animation
         function startFireworksShow() {
             const container = document.getElementById('fireworks-container');
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98', '#ff9f43', '#a55eea'];
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98', '#ff9f43', '#a55eea', '#ff4757', '#2ed573', '#1e90ff', '#ff6348'];
             
-            for (let i = 0; i < 30; i++) {
+            // Create multiple firework bursts
+            for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
-                    const centerX = Math.random() * 80 + 10;
-                    const centerY = Math.random() * 60 + 20;
-                    
-                    for (let j = 0; j < 15; j++) {
-                        const firework = document.createElement('div');
-                        firework.className = 'firework';
-                        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                        firework.style.left = centerX + '%';
-                        firework.style.top = centerY + '%';
-                        
-                        const angle = (j * 24) * Math.PI / 180;
-                        const distance = 50 + Math.random() * 100;
-                        firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-                        firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-                        firework.style.animationDelay = Math.random() * 0.5 + 's';
-                        
-                        container.appendChild(firework);
-                        setTimeout(() => firework.remove(), 2000);
-                    }
-                }, i * 300);
+                    createFireworkBurst(container, colors);
+                }, i * 200);
             }
+            
+            // Add rocket launches
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createRocket(container, colors);
+                }, i * 400);
+            }
+        }
+        
+        function createFireworkBurst(container, colors) {
+            const centerX = Math.random() * 70 + 15;
+            const centerY = Math.random() * 50 + 25;
+            const burstColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Create central burst
+            const burst = document.createElement('div');
+            burst.className = 'firework-burst';
+            burst.style.backgroundColor = burstColor;
+            burst.style.left = centerX + '%';
+            burst.style.top = centerY + '%';
+            burst.style.color = burstColor;
+            container.appendChild(burst);
+            setTimeout(() => burst.remove(), 1500);
+            
+            // Create radiating particles
+            const particleCount = 20 + Math.random() * 15;
+            for (let j = 0; j < particleCount; j++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.backgroundColor = burstColor;
+                firework.style.color = burstColor;
+                firework.style.left = centerX + '%';
+                firework.style.top = centerY + '%';
+                
+                const angle = (j * (360 / particleCount)) * Math.PI / 180;
+                const distance = 80 + Math.random() * 120;
+                firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+                firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+                firework.style.animationDelay = Math.random() * 0.3 + 's';
+                
+                // Add trail effect
+                const trail = document.createElement('div');
+                trail.className = 'firework-trail';
+                trail.style.color = burstColor;
+                trail.style.left = '50%';
+                trail.style.top = '50%';
+                trail.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
+                firework.appendChild(trail);
+                
+                container.appendChild(firework);
+                setTimeout(() => firework.remove(), 2500);
+            }
+        }
+        
+        function createRocket(container, colors) {
+            const startX = Math.random() * 80 + 10;
+            const startY = 90;
+            const endY = Math.random() * 40 + 20;
+            const rocketColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const rocket = document.createElement('div');
+            rocket.className = 'rocket';
+            rocket.style.left = startX + '%';
+            rocket.style.top = startY + '%';
+            rocket.style.setProperty('--rocket-height', -(startY - endY) + 'vh');
+            
+            container.appendChild(rocket);
+            
+            // Create explosion at the end
+            setTimeout(() => {
+                createFireworkBurst(container, colors);
+                rocket.remove();
+            }, 1000);
         }
 
         // Audio functions
