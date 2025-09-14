@@ -283,12 +283,12 @@
              class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover mx-auto mb-4 shadow-xl border-2 border-pink-300 heart-beat">
       </div>
       
-      <h2 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-pink-600 bg-clip-text text-transparent mb-3 heart-beat text-glow">
+      <h2 class="text-xl md:text-3xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-pink-600 bg-clip-text text-transparent mb-3 heart-beat text-glow">
         🎉 🎂 Happy Birthday, Muntsha! 🎂 🎉
       </h2>
       
       <div class="bg-white/70 backdrop-blur-sm rounded-xl p-3 mb-4 shadow-inner">
-        <p class="text-gray-800 leading-relaxed text-xs md:text-sm font-medium">
+        <p class="text-gray-800 leading-relaxed text-sm md:text-base font-medium">
           <span class="text-lg animate-bounce">💖</span> <strong class="text-pink-600 text-glow">Happy Birthday, my love!</strong> <span class="text-lg animate-bounce">💖</span><br><br>
           <span class="text-purple-700 font-bold">Muntsha</span>, you are the <em class="text-pink-600 font-semibold">best thing</em> that has ever happened to me. I love you with all my <strong class="text-red-500 text-glow">heart and soul</strong>. Sometimes I wish I could open my heart so you could see how deeply I feel for you.<br><br>
           I'm truly the <strong class="text-green-600 font-bold">luckiest person</strong> to have you in my life. May <span class="text-blue-600 font-semibold">Allah</span> always bless you with <em class="text-yellow-600 font-medium">happiness</em>, <em class="text-green-600 font-medium">health</em>, and <em class="text-purple-600 font-medium">endless joy</em>.<br><br>
@@ -318,6 +318,8 @@
     let cardsWon = [];
     let moves = 0;
     let boardLocked = false;
+    let isProcessing = false;
+    let clickCooldown = false;
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -533,38 +535,45 @@
     }
 
     function flipCard(event) {
-      if (boardLocked) return;
+      // Prevent rapid clicking and multiple card flips
+      if (boardLocked || isProcessing || clickCooldown) return;
+      
       const card = event.target.closest('.game-card');
+      if (!card) return;
+      
       const cardId = card.getAttribute('data-id');
 
-      if (card.classList.contains('matched') || cardsChosenId.includes(cardId)) {
+      if (card.classList.contains('matched') || card.classList.contains('flipped') || cardsChosenId.includes(cardId)) {
         return;
       }
 
-      // Initialize audio on first user interaction
+      // Prevent more than 2 cards being selected
+      if (cardsChosen.length >= 2) return;
+
+      // Set cooldown to prevent rapid clicking
+      clickCooldown = true;
+      setTimeout(() => clickCooldown = false, 150);
+
       if (!audioContext) {
         initAudio();
       }
       
       playFlipSound();
       card.classList.add('flipped');
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        card.classList.add('wiggle');
-        setTimeout(() => card.classList.remove('wiggle'), 500);
-      }
       const cardName = card.getAttribute('data-name');
       cardsChosen.push(cardName);
       cardsChosenId.push(cardId);
 
       if (cardsChosen.length === 2) {
+        isProcessing = true;
+        boardLocked = true;
         moves++;
         moveCounter.textContent = moves;
-        setTimeout(checkForMatch, 600);
+        setTimeout(checkForMatch, 400);
       }
     }
 
     function checkForMatch() {
-      boardLocked = true;
       const cards = document.querySelectorAll('.game-card');
       const optionOneId = cardsChosenId[0];
       const optionTwoId = cardsChosenId[1];
@@ -572,27 +581,22 @@
       if (optionOneId === optionTwoId) {
         setTimeout(() => {
           cards[optionOneId].classList.remove('flipped');
-          boardLocked = false;
-        }, 500);
+          resetGameState();
+        }, 300);
       } else if (cardsChosen[0] === cardsChosen[1]) {
         const cardOne = cards[optionOneId];
         const cardTwo = cards[optionTwoId];
         
         playMatchSound();
         
-        // Keep cards flipped and add matched styling
         cardOne.classList.add('matched');
         cardTwo.classList.add('matched');
-        cardOne.classList.add('flipped');
-        cardTwo.classList.add('flipped');
         
-        // Change color to indicate match with glow effect
         const frontOne = cardOne.querySelector('.card-front');
         const frontTwo = cardTwo.querySelector('.card-front');
         frontOne.className = frontOne.className.replace('card-gradient-1', 'card-gradient-3');
         frontTwo.className = frontTwo.className.replace('card-gradient-1', 'card-gradient-3');
         
-        // Add glow effect to matched cards
         cardOne.style.boxShadow = '0 0 20px rgba(79, 172, 254, 0.6)';
         cardTwo.style.boxShadow = '0 0 20px rgba(79, 172, 254, 0.6)';
         
@@ -600,7 +604,7 @@
         pairsFound.textContent = cardsWon.length;
 
         setTimeout(() => {
-          boardLocked = false;
+          resetGameState();
           if (cardsWon.length === cardEmojis.length) {
             playVictoryMusic();
             createConfetti();
@@ -608,19 +612,23 @@
             setTimeout(() => {
               messageModal.classList.remove('hidden');
               playHappyBirthdayMelody();
-            }, 1000);
+            }, 600);
           }
-        }, 700);
+        }, 500);
       } else {
         setTimeout(() => {
           cards[optionOneId].classList.remove('flipped');
           cards[optionTwoId].classList.remove('flipped');
-          boardLocked = false;
-        }, 1000);
+          resetGameState();
+        }, 800);
       }
+    }
 
+    function resetGameState() {
       cardsChosen = [];
       cardsChosenId = [];
+      boardLocked = false;
+      isProcessing = false;
     }
 
     restartButton.addEventListener('click', () => {
