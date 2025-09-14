@@ -265,9 +265,14 @@
 
     <!-- Controls -->
     <div class="text-center">
-      <button id="restart-button" class="btn-gradient text-white font-bold py-2 px-4 rounded-full text-xs md:text-sm mb-2 shadow-lg border border-white/20">
-        🎮 Restart Game 🎮
-      </button>
+      <div class="flex gap-2 justify-center mb-2">
+        <button onclick="window.location.href='adventure.html'" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-3 rounded-full text-xs shadow-lg">
+          ← Back
+        </button>
+        <button id="restart-button" class="btn-gradient text-white font-bold py-2 px-4 rounded-full text-xs md:text-sm shadow-lg border border-white/20">
+          🎮 Restart 🎮
+        </button>
+      </div>
       <p class="text-xs text-gray-500">
         Made by <span class="text-purple-600 font-bold">Syed Ali Hashmi</span>
       </p>
@@ -303,6 +308,11 @@
   </div>
 
   <script>
+    // Redirect to adventure page if not coming from there
+    if (!document.referrer.includes('adventure.html') && !sessionStorage.getItem('fromAdventure')) {
+      window.location.href = 'adventure.html';
+    }
+    
     const gameBoard = document.getElementById('game-board');
     const restartButton = document.getElementById('restart-button');
     const moveCounter = document.getElementById('move-counter');
