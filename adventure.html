@@ -445,17 +445,26 @@
             document.getElementById('letter-modal').classList.add('hidden');
         }
 
-        // Rocket Fireworks Show
+        // Spectacular Rocket Fireworks Show
         function startFireworksShow() {
             const container = document.getElementById('fireworks-container');
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98', '#ff9f43', '#a55eea'];
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98', '#ff9f43', '#a55eea', '#ff4757', '#2ed573', '#1e90ff', '#ff6348'];
             
-            // Launch rockets that explode
-            for (let i = 0; i < 12; i++) {
+            // Launch 30 rockets in waves
+            for (let i = 0; i < 30; i++) {
                 setTimeout(() => {
                     launchRocket(container, colors);
-                }, i * 600);
+                }, i * 300);
             }
+            
+            // Add finale burst after 8 seconds
+            setTimeout(() => {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        launchRocket(container, colors);
+                    }, i * 100);
+                }
+            }, 8000);
         }
         
         function launchRocket(container, colors) {
@@ -490,23 +499,29 @@
             container.appendChild(explosion);
             setTimeout(() => explosion.remove(), 800);
             
-            // Create radiating particles
-            for (let j = 0; j < 12; j++) {
-                const firework = document.createElement('div');
-                firework.className = 'firework';
-                firework.style.backgroundColor = color;
-                firework.style.color = color;
-                firework.style.left = x + '%';
-                firework.style.top = y + '%';
-                
-                const angle = (j * 30) * Math.PI / 180;
-                const distance = 80 + Math.random() * 100;
-                firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-                firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-                
-                container.appendChild(firework);
-                setTimeout(() => firework.remove(), 2000);
-            }
+            // Create multiple rings of particles for bigger explosion
+            const particleCounts = [8, 16]; // Inner and outer rings
+            const distances = [60, 120]; // Different distances
+            
+            particleCounts.forEach((count, ring) => {
+                for (let j = 0; j < count; j++) {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.backgroundColor = color;
+                    firework.style.color = color;
+                    firework.style.left = x + '%';
+                    firework.style.top = y + '%';
+                    
+                    const angle = (j * (360 / count)) * Math.PI / 180;
+                    const distance = distances[ring] + Math.random() * 60;
+                    firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+                    firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+                    firework.style.animationDelay = ring * 0.1 + 's';
+                    
+                    container.appendChild(firework);
+                    setTimeout(() => firework.remove(), 2500);
+                }
+            });
         }
 
         // Audio functions
