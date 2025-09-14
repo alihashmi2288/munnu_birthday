@@ -445,39 +445,67 @@
             document.getElementById('letter-modal').classList.add('hidden');
         }
 
-        // Optimized Fireworks animation
+        // Rocket Fireworks Show
         function startFireworksShow() {
             const container = document.getElementById('fireworks-container');
-            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98'];
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffd700', '#ff69b4', '#98fb98', '#ff9f43', '#a55eea'];
             
-            // Reduced number of fireworks for better performance
-            for (let i = 0; i < 15; i++) {
+            // Launch rockets that explode
+            for (let i = 0; i < 12; i++) {
                 setTimeout(() => {
-                    createSimpleFirework(container, colors);
-                }, i * 400);
+                    launchRocket(container, colors);
+                }, i * 600);
             }
         }
         
-        function createSimpleFirework(container, colors) {
-            const centerX = Math.random() * 80 + 10;
-            const centerY = Math.random() * 60 + 20;
-            const burstColor = colors[Math.floor(Math.random() * colors.length)];
+        function launchRocket(container, colors) {
+            const startX = Math.random() * 80 + 10;
+            const explodeY = Math.random() * 40 + 20;
+            const rocketColor = colors[Math.floor(Math.random() * colors.length)];
             
-            // Create 8 particles only (reduced from 20-35)
-            for (let j = 0; j < 8; j++) {
+            // Create rocket
+            const rocket = document.createElement('div');
+            rocket.className = 'rocket';
+            rocket.style.left = startX + '%';
+            rocket.style.bottom = '0%';
+            rocket.style.setProperty('--launch-height', -(100 - explodeY) + 'vh');
+            
+            container.appendChild(rocket);
+            
+            // Explode after rocket reaches peak
+            setTimeout(() => {
+                createExplosion(container, startX, explodeY, rocketColor);
+                rocket.remove();
+            }, 1200);
+        }
+        
+        function createExplosion(container, x, y, color) {
+            // Create central explosion flash
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.backgroundColor = color;
+            explosion.style.color = color;
+            explosion.style.left = x + '%';
+            explosion.style.top = y + '%';
+            container.appendChild(explosion);
+            setTimeout(() => explosion.remove(), 800);
+            
+            // Create radiating particles
+            for (let j = 0; j < 12; j++) {
                 const firework = document.createElement('div');
                 firework.className = 'firework';
-                firework.style.backgroundColor = burstColor;
-                firework.style.left = centerX + '%';
-                firework.style.top = centerY + '%';
+                firework.style.backgroundColor = color;
+                firework.style.color = color;
+                firework.style.left = x + '%';
+                firework.style.top = y + '%';
                 
-                const angle = (j * 45) * Math.PI / 180; // 45 degree intervals
-                const distance = 60 + Math.random() * 80;
+                const angle = (j * 30) * Math.PI / 180;
+                const distance = 80 + Math.random() * 100;
                 firework.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
                 firework.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
                 
                 container.appendChild(firework);
-                setTimeout(() => firework.remove(), 1500);
+                setTimeout(() => firework.remove(), 2000);
             }
         }
 
